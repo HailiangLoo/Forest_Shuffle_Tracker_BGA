@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name         Forest Shuffle Tracker (森森不息 记牌器)
 // @namespace    http://tampermonkey.net/
 // @version      test v1
@@ -7,8 +7,8 @@
 // @match        *://*.boardgamearena.com/*
 // @grant        none
 // @run-at       document-start
-// @updateURL    https://raw.githubusercontent.com/HailiangLoo/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
-// @downloadURL  https://raw.githubusercontent.com/HailiangLoo/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
+// @updateURL    https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
+// @downloadURL  https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
 // @supportURL   https://github.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/issues
 // ==/UserScript==
 
@@ -846,7 +846,7 @@
             this.panel = null;
             this.tooltip = null;
             this.collapsed = false;
-            this.showChinese = true;
+            this.showChinese = /^zh/i.test(document.documentElement.lang || navigator.language || 'zh');
         }
 
         init() {
@@ -934,7 +934,7 @@
                         <span style="display:flex; align-items:center;">
                             <span id="fst-title" style="font-weight:bold; font-size:15px; letter-spacing:0.5px;">🌲 森森不息记牌器 test v1</span>
                             <span id="fst-lang" style="color:#60a5fa; cursor:pointer; font-size:10px; margin-left:8px; border-bottom:1px dotted #60a5fa;">EN</span>
-                            <span id="fst-download-log" style="color:#3b82f6; cursor:pointer; font-size:10px; margin-left:8px; border-bottom:1px dotted #3b82f6;">🐞日志</span>
+                            <span id="fst-download-log" class="fst-loc" data-loc="log" style="color:#3b82f6; cursor:pointer; font-size:10px; margin-left:8px; border-bottom:1px dotted #3b82f6;">🐞日志</span>
                         </span>
                         <button class="fst-collapse-btn" id="fst-toggle">−</button>
                     </div>
@@ -1054,6 +1054,8 @@
             // Update static structural text based on lang
             const sTitle = this.panel.querySelector('#fst-title');
             if (sTitle) sTitle.textContent = this.getString('title');
+            const sLang = this.panel.querySelector('#fst-lang');
+            if (sLang) sLang.textContent = this.showChinese ? 'EN' : '中';
             this.panel.querySelectorAll('.fst-loc').forEach(el => {
                 const key = el.getAttribute('data-loc');
                 if (key) el.textContent = this.getString(key);
