@@ -7,8 +7,8 @@
 // @match        *://*.boardgamearena.com/*
 // @grant        none
 // @run-at       document-start
-// @updateURL    https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
-// @downloadURL  https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
+// @updateURL    https://raw.githubusercontent.com/HailiangLoo/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
+// @downloadURL  https://raw.githubusercontent.com/HailiangLoo/forest-shuffle-tracker/main/forest_shuffle_tracker.user.js
 // @supportURL   https://github.com/YOUR_GITHUB_USERNAME/forest-shuffle-tracker/issues
 // ==/UserScript==
 
