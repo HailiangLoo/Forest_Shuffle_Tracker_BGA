@@ -3,7 +3,7 @@
 ---
 
 <details open>
-<summary><h2 style="display:inline-block">🇺🇸 English Version </h2></summary>
+<summary><h2 style="display:inline-block"> English Version </h2></summary>
 
 **Status: Test v1**
 
@@ -30,7 +30,7 @@ I have no long-term plans to maintain or polish this tracker. **I am hoping some
 ---
 
 <details>
-<summary><h2 style="display:inline-block">🇨🇳 中文版 </h2></summary>
+<summary><h2 style="display:inline-block"> 中文版 </h2></summary>
 
 **状态：Test v1 (测试版)**
 
