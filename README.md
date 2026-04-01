@@ -1,4 +1,4 @@
-# Forest Shuffle Tracker / 森森不息记牌器
+# Forest Shuffle Tracker (BGA)/ 森森不息记牌器 (BGA)
 
 ---
 
