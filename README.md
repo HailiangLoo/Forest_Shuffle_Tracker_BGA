@@ -11,6 +11,12 @@
 
 This is an unofficial, experimental card tracker for the game **Forest Shuffle** on Board Game Arena (BGA). 
 
+### 🚀 How to Install & Use (For Non-Technical Users)
+1. **Install a Userscript Manager:** First, you need to install [Tampermonkey](https://www.tampermonkey.net/) inside your browser (Chrome, Edge, Firefox, etc.).
+2. **Install the Script:** Click on the `forest_shuffle_tracker.user.js` file in this repository. Towards the top right corner of the code view, you will see a button labeled **"Raw"**. Click it.
+3. **Confirm Installation:** Tampermonkey will automatically detect the script and pop up a new tab asking if you want to install it. Click **Install**.
+4. **Play the Game:** Simply go to Board Game Arena and start a game of Forest Shuffle. A draggable tracker panel will automatically appear on your screen!
+
 ### ⚠️ Disclaimer & Current Issues
 - **I am completely new to this game.** I do not actually play Forest Shuffle. I wrote this tracker purely for fun and as an experimental project. 
 - Because I don't play the game, **many design choices are probably not optimized for real players.**
@@ -28,6 +34,12 @@ I have no long-term plans to maintain or polish this tracker. **I am hoping some
 **状态：Test v1 (测试版)**
 
 这是一个用于 Board Game Arena (BGA) 上 **《森森不息》(Forest Shuffle)** 游戏的非官方、实验性记牌器。
+
+### 🚀 如何安装和使用？（小白教程）
+1. **安装浏览器插件：** 首先，你需要在你的浏览器（Chrome、Edge、搜狗等）中安装一个叫 [Tampermonkey (油猴)](https://www.tampermonkey.net/) 的扩展插件。
+2. **安装记牌器脚本：** 在这个 GitHub 页面里，点击打开 `forest_shuffle_tracker.user.js` 这个文件。在代码框的右上角找到一个叫 **"Raw"**（或者“原始数据”）的按钮，点击它。
+3. **确认安装：** 此时油猴插件会自动弹出一个新网页，上面写着“安装这个脚本”。点击 **安装**。
+4. **开始玩游戏：** 回到 Board Game Arena，直接开始一盘《森森不息》。你会发现在游戏画面的左边自动出现了一个可以自由拖拽的记牌器面板！
 
 ### ⚠️ 声明与已知问题
 - **我完全是个萌新。** 实际上我连这个游戏规则都不懂。我写这个记牌器纯粹就是觉得好玩、练练手。
