@@ -1,11 +1,11 @@
 # Forest Shuffle Tracker / 森森不息记牌器
 
-[English](#english) | [中文](#中文)
+*On GitHub, standard markdown doesn't support clickable tabs, but we can use collapsible blocks! Click the headers below to switch languages.* / GitHub 网页不支持标准的点击标签页，但我们可以折叠内容！点击下方标题切换语言。
 
 ---
 
-<a id="english"></a>
-## English
+<details open>
+<summary><h2 style="display:inline-block">🇺🇸 English Version / 英文版</h2></summary>
 
 **Status: Test v1**
 
@@ -26,10 +26,12 @@ This is an unofficial, experimental card tracker for the game **Forest Shuffle**
 ### 🤝 Seeking Maintainers
 I have no long-term plans to maintain or polish this tracker. **I am hoping someone who actually plays the game and knows how to code will take over this project and turn it into something genuinely useful for the community.** Feel free to fork, rewrite, and use anything from here!
 
+</details>
+
 ---
 
-<a id="中文"></a>
-## 中文
+<details>
+<summary><h2 style="display:inline-block">🇨🇳 中文版 / Chinese Version</h2></summary>
 
 **状态：Test v1 (测试版)**
 
@@ -49,3 +51,5 @@ I have no long-term plans to maintain or polish this tracker. **I am hoping some
 
 ### 🤝 跪求接盘侠
 我没有长期维护或者打磨这个记牌器的计划。**我非常希望能有真正玩这个游戏、懂代码的大佬来接管这坨答辩，把它重写/改造成一个非常好用的工具造福社区。** 欢迎大家直接 Fork，随意复制、魔改或者推翻重构！
+
+</details>
