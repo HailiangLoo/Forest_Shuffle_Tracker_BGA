@@ -1,7 +1,5 @@
 # Forest Shuffle Tracker / 森森不息记牌器
 
-*On GitHub, standard markdown doesn't support clickable tabs, but we can use collapsible blocks! Click the headers below to switch languages.* / GitHub 网页不支持标准的点击标签页，但我们可以折叠内容！点击下方标题切换语言。
-
 ---
 
 <details open>
