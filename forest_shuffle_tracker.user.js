@@ -1265,7 +1265,9 @@
                     } else if (copies <= 2) {
                         if (remaining <= 1) colorClass = 'fst-count-low';
                     } else {
-                        const seenPct = seen / copies;
+                        const theoreticalPool = Math.max(1, this.state.totalUniverseSize + this.state.removedCount);
+                        const initialExpected = copies * (this.state.totalUniverseSize / theoreticalPool);
+                        const seenPct = initialExpected > 0 ? (seen / initialExpected) : 0;
                         if (remaining <= 1 || seenPct >= 0.66) colorClass = 'fst-count-low';
                         else if (seenPct > 0.33) colorClass = 'fst-count-mid';
                     }
