@@ -1,4 +1,6 @@
 # Forest Shuffle Tracker (BGA)/ 森森不息记牌器 (BGA)
+<img width="3820" height="1810" alt="image" src="https://github.com/user-attachments/assets/8868533c-ef8b-4a66-9d33-18e41a83190a" />
+<img width="1210" height="1578" alt="image" src="https://github.com/user-attachments/assets/840107b8-ef7a-4e7b-9597-7b766192465d" />
 
 ---
 
