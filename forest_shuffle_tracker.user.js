@@ -1230,7 +1230,17 @@
             const loc = this.getNameFn();
             const seenCounts = this.state.getSeenCounts();
             let totalSeenOverall = 0;
-            for (const k in seenCounts) totalSeenOverall += seenCounts[k];
+
+            // Count unique PHYSICAL cards that have their identities known
+            const countPhysical = (id) => {
+                const names = this.registry.getNames(id);
+                if (names && names[0] !== 'Unknown') totalSeenOverall++;
+            };
+            this.state.played.forEach((_, id) => countPhysical(id));
+            this.state.graveyard.forEach(id => countPhysical(id));
+            this.state.clearing.forEach(id => countPhysical(id));
+            this.state.cave.forEach((_, id) => countPhysical(id));
+            this.state.knownHands.forEach((_, id) => countPhysical(id));
 
             const theoreticalPool = this.state.totalUniverseSize + this.state.removedCount;
             const unknownPoolTotal = Math.max(1, theoreticalPool - totalSeenOverall);
