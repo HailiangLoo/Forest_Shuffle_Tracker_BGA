@@ -1229,6 +1229,14 @@
         _libCat(title, names, db, graveCounts) {
             const loc = this.getNameFn();
             const seenCounts = this.state.getSeenCounts();
+            let totalSeenOverall = 0;
+            for (const k in seenCounts) totalSeenOverall += seenCounts[k];
+
+            const theoreticalPool = this.state.totalUniverseSize + this.state.removedCount;
+            const unknownPoolTotal = Math.max(1, theoreticalPool - totalSeenOverall);
+            // Accounts for deck + unknown hands + face-down saplings (unknown identities in play)
+            const targetPoolTarget = Math.max(0, this.state.totalUniverseSize - totalSeenOverall);
+
             let rows = '';
             let sectionSeen = 0;
             let sectionTotal = 0;
@@ -1263,11 +1271,7 @@
                     }
                 }
 
-                const s = this.state;
-                const theoreticalPool = s.totalUniverseSize + s.removedCount;
-                const expected = theoreticalPool > 0
-                    ? Math.round(copies * (s.totalUniverseSize / theoreticalPool) * 10) / 10
-                    : copies;
+                const expected = Math.round(remaining * (targetPoolTarget / unknownPoolTotal) * 10) / 10;
 
                 const gHtml = gCount > 0 ? `<span style="color:#c084fc; font-size:10px; margin:0 4px;" title="墓地/洞穴中有 ${gCount} 张">⚰️${gCount}</span>` : `<span style="display:inline-block; width:22px;"></span>`;
 
