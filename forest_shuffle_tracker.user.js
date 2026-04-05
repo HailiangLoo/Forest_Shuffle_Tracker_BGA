@@ -490,14 +490,28 @@
         }
 
         initFromGamedatas(gd) {
+            const getHandCount = (hand) => {
+                if (typeof hand === 'number') return hand;
+                if (typeof hand === 'string') return parseInt(hand) || 0;
+                if (typeof hand === 'object' && hand !== null) return Object.keys(hand).length;
+                return 0;
+            };
+
             if (gd.players) {
                 for (const [pid, p] of Object.entries(gd.players)) {
                     this.players[pid] = {
                         id: pid, name: p.name, color: p.color,
-                        handCount: parseInt(p.hand) || 0,
+                        handCount: getHandCount(p.hand),
                         caveCount: parseInt(p.cave) || 0,
                         score: p.score || 0
                     };
+
+                    // Automatically know our own hand cards at load
+                    if (typeof p.hand === 'object' && p.hand !== null) {
+                        for (const cid of Object.keys(p.hand)) {
+                            this.knownHands.set(String(cid), String(pid));
+                        }
+                    }
 
                     // Register all trees and table cards from gamedatas
                     if (p.trees) {
@@ -546,7 +560,7 @@
             }
             if (gd.players) {
                 for (const p of Object.values(gd.players)) {
-                    dynamicTotal += parseInt(p.hand) || 0;
+                    dynamicTotal += getHandCount(p.hand);
                     dynamicTotal += parseInt(p.cave) || 0;
                     if (p.trees) dynamicTotal += Object.keys(p.trees).length;
                     if (p.table) dynamicTotal += Object.keys(p.table).length;
@@ -719,7 +733,7 @@
                 this._handleNewOnClearing(args);
             }
             else if (top === 'takecardfromdeck') {
-                this._handleDrawFromDeck(playerId);
+                this._handleDrawFromDeck(args, playerId);
             }
             else if (top === 'clearclearing' || top === 'discardclearing') {
                 this.state.flushClearing();
@@ -793,12 +807,23 @@
             logDebug('NEW_ON_CLEARING', { cardId, names });
         }
 
-        _handleDrawFromDeck(playerId) {
+        _handleDrawFromDeck(args, playerId) {
+            // Private notifications (with cardId) don't include player_id — it's always "us"
+            if (!playerId && args.cardId) {
+                try { playerId = window.gameui.player_id; } catch (e) { }
+            }
             if (this.state.deckCount > 0) this.state.deckCount--;
             if (playerId && this.state.players[playerId]) {
                 this.state.players[playerId].handCount++;
             }
-            logDebug('DRAW_DECK', { player: playerId });
+            const cid = args.cardId || args.card_id;
+            if (cid && playerId) {
+                this.state.knownHands.set(String(cid), String(playerId));
+                // Also register the card name from notification
+                const names = this.registry.parseCardNames(args.cardName || args.card_name);
+                if (names && names.length > 0) this.registry.register(cid, names);
+            }
+            logDebug('DRAW_DECK', { player: playerId, cardId: cid });
         }
 
         _handleHibernate(args, playerId) {
@@ -1164,6 +1189,15 @@
         }
 
         _buildHandHTML() {
+            // Prune stale knownHands entries — cards that moved to other zones
+            const staleIds = [];
+            for (const [cid] of this.state.knownHands) {
+                if (this.state.played.has(cid) || this.state.graveyard.has(cid) || this.state.clearing.has(cid) || this.state.cave.has(cid)) {
+                    staleIds.push(cid);
+                }
+            }
+            for (const sid of staleIds) this.state.knownHands.delete(sid);
+
             let html = '';
             for (const pid of this.getPlayerOrder()) {
                 const p = this.state.players[pid];
@@ -1229,23 +1263,28 @@
         _libCat(title, names, db, graveCounts) {
             const loc = this.getNameFn();
             const seenCounts = this.state.getSeenCounts();
-            let totalSeenOverall = 0;
 
-            // Count unique PHYSICAL cards that have their identities known
-            const countPhysical = (id) => {
-                const names = this.registry.getNames(id);
-                if (names && names[0] !== 'Unknown') totalSeenOverall++;
-            };
-            this.state.played.forEach((_, id) => countPhysical(id));
-            this.state.graveyard.forEach(id => countPhysical(id));
-            this.state.clearing.forEach(id => countPhysical(id));
-            this.state.cave.forEach((_, id) => countPhysical(id));
-            this.state.knownHands.forEach((_, id) => countPhysical(id));
+            // Sum up all seen species counts to get totalSeenSpecies
+            let totalSeenSpecies = 0;
+            for (const v of Object.values(seenCounts)) totalSeenSpecies += v;
 
-            const theoreticalPool = this.state.totalUniverseSize + this.state.removedCount;
-            const unknownPoolTotal = Math.max(1, theoreticalPool - totalSeenOverall);
-            // Accounts for deck + unknown hands + face-down saplings (unknown identities in play)
-            const targetPoolTarget = Math.max(0, this.state.totalUniverseSize - totalSeenOverall);
+            // Sum total copies of all active card species in the game
+            let totalCopiesAll = 0;
+            const allDBs = [CARD_DB.top, CARD_DB.sides, CARD_DB.trees, CARD_DB.bottom];
+            const allStructs = [CARD_DB_STRUCTURE.top, CARD_DB_STRUCTURE.sides, CARD_DB_STRUCTURE.trees, CARD_DB_STRUCTURE.bottom];
+            for (let i = 0; i < allDBs.length; i++) {
+                for (const bn of allStructs[i]) {
+                    const inf = allDBs[i] ? allDBs[i][bn] : null;
+                    if (!inf) continue;
+                    if (inf.exp === 'alpine' && !this.state.hasAlpine) continue;
+                    if (inf.exp === 'woodland' && !this.state.hasWoodland) continue;
+                    totalCopiesAll += inf.copies;
+                }
+            }
+
+            // Simple formula: remaining / totalUnseen * deckCount
+            const totalUnseen = Math.max(1, totalCopiesAll - totalSeenSpecies);
+            const deckCount = this.state.deckCount;
 
             let rows = '';
             let sectionSeen = 0;
@@ -1283,7 +1322,7 @@
                     }
                 }
 
-                const expected = Math.round(remaining * (targetPoolTarget / unknownPoolTotal) * 10) / 10;
+                const expected = Math.round(remaining * (deckCount / totalUnseen) * 10) / 10;
 
                 const gHtml = gCount > 0 ? `<span style="color:#c084fc; font-size:10px; margin:0 4px;" title="墓地/洞穴中有 ${gCount} 张">⚰️${gCount}</span>` : `<span style="display:inline-block; width:22px;"></span>`;
 
